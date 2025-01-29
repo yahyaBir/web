@@ -1,0 +1,29 @@
+/* Mevcut style.css içeriğini buraya kopyalayalım */
+/* Tema Renkleri */
+:root {
+    /* Ana Renkler */
+    --primary-color: #4fffb0;
+    --primary-dark: #3ee69d;
+    --secondary-color: #000000;
+    
+    /* Metin Renkleri */
+    --text-light: #ffffff;
+    --text-dark: #000000;
+    --text-gray: #666666;
+    
+    /* Arka Plan Renkleri */
+    --bg-dark: #000000;
+    --bg-light: #ffffff;
+    
+    /* Navbar Yüksekliği */
+    --navbar-height: 80px;
+}
+
+/* Reset ve Genel Stiller */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tüm CSS kodlarınız buraya gelecek */ 
