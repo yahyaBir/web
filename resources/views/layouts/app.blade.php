@@ -61,7 +61,5 @@
     <footer>
         <!-- Footer içeriği daha sonra eklenecek -->
     </footer>
-
-    <script src="{{ asset('js/main.js') }}"></script>
 </body>
 </html> 
