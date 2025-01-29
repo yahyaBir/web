@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arşen Prosess - Süperkritik Ekstraktör Çözümleri</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @vite(['resources/js/app.js'])
 </head>
 <body>
     <header class="header">
