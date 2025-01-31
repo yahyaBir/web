@@ -10,4 +10,11 @@ export default defineConfig({
             buildDirectory: 'build'
         }),
     ],
+    build: {
+        outDir: 'public/build',
+        manifest: true,
+        rollupOptions: {
+            input: ['resources/css/app.css', 'resources/js/app.js']
+        }
+    }
 });
