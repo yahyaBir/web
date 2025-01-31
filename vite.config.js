@@ -5,21 +5,10 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
-            buildDirectory: 'build'
+            refresh: true
         }),
     ],
     build: {
-        outDir: 'public/build',
-        assetsDir: '',
-        manifest: true,
-        rollupOptions: {
-            input: ['resources/css/app.css', 'resources/js/app.js']
-        }
-    },
-    server: {
-        hmr: {
-            host: 'localhost'
-        }
+        outDir: 'public/build'
     }
 });
