@@ -16,7 +16,7 @@
     --bg-light: #ffffff;
     
     /* Navbar Yüksekliği */
-    --navbar-height: 80px;
+    --navbar-height: 100px;
 }
 
 /* Reset ve Genel Stiller */
@@ -69,7 +69,7 @@ button {
 .navbar-brand {
     display: flex;
     align-items: center;
-    min-width: 220px;
+    min-width: 280px;
     height: var(--navbar-height);
 }
 
@@ -77,11 +77,11 @@ button {
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 10px 0;
+    padding: 12px 0;
 }
 
 .logo img {
-    height: 80px;
+    height: 90px;
     width: auto;
     transition: transform 0.3s ease;
     object-fit: contain;
@@ -547,11 +547,245 @@ button {
     }
 
     .logo img {
-        height: 60px;
+        height: 70px;
     }
     
     .logo {
         padding: 8px 0;
+    }
+
+    :root {
+        --navbar-height: 80px;
+    }
+    
+    .navbar-brand {
+        min-width: 200px;
+    }
+}
+
+/* References Section */
+.references {
+    padding: 5rem 5%;
+    background-color: var(--bg-light);
+}
+
+.references-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.reference-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: white;
+}
+
+.reference-item img {
+    max-width: 100%;
+    height: auto;
+    max-height: 80px;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .references-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .reference-item {
+        padding: 1rem;
+    }
+
+    .reference-item img {
+        max-height: 60px;
+    }
+}
+
+/* Footer */
+.footer {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    padding: 4rem 2rem 0;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 4rem;
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.footer-logo {
+    max-width: 180px;
+    height: auto;
+}
+
+.newsletter p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.email-signup {
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem;
+}
+
+.email-signup input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.email-signup input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.email-signup button {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0 0.5rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.social-links a:hover {
+    opacity: 1;
+}
+
+.footer-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+}
+
+.footer-section h3 {
+    color: var(--text-light);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-section a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: var(--text-light);
+}
+
+.footer-bottom {
+    margin-top: 4rem;
+    padding: 1.5rem;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.onemore {
+    color: var(--text-light);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.onemore:hover {
+    opacity: 1;
+}
+
+.onemore span {
+    opacity: 0.4;
+}
+
+@media (max-width: 1200px) {
+    .footer-nav {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .footer-brand {
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .footer-logo {
+        margin: 0 auto;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 3rem 1rem 0;
+    }
+
+    .footer-nav {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-nav {
+        grid-template-columns: 1fr;
+        text-align: center;
     }
 }
 
