@@ -48,7 +48,7 @@
                     </li>
                 </ul>
                 <div class="navbar-end">
-                    <a href="#iletisim" class="contact-button">İletişime Geç</a>
+                    <a href="#iletisim" class="contact-button">İletişime Geçc</a>
                 </div>
             </div>
         </nav>
@@ -61,5 +61,6 @@
     <footer>
         <!-- Footer içeriği daha sonra eklenecek -->
     </footer>
+
 </body>
 </html> 
