@@ -4,7 +4,15 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <img src="{{ asset('images/robomation.png') }}" alt="Endüstriyel Ekipmanlar" class="hero-image">
+            <video class="hero-video" autoplay muted loop playsinline>
+                <source src="{{ asset('images/video.mp4') }}" type="video/mp4">
+            </video>
+            <!--
+            <div class="hero-overlay">
+                <h1>Arşen Prosess</h1>
+                <p>Süperkritik Ekstraktör Çözümleri</p>
+            </div>
+            -->
         </div>
     </section>
 
@@ -19,7 +27,7 @@
             @for ($i = 1; $i <= 4; $i++)
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="{{ asset('images/robomation.png') }}" alt="Süperkritik Ekstraktör">
+                        <img src="{{ asset('images/metal-tank.jpg') }}" alt="Süperkritik Ekstraktör">
                     </div>
                     <div class="product-info">
                         <h3>Süperkritik Ekstraktör</h3>

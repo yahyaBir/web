@@ -11,7 +11,7 @@
         <nav class="navbar">
             <div class="navbar-brand">
                 <a href="{{ route('home') }}" class="logo">
-                    <img src="{{ asset('images/logo.png') }}" alt="UP Logo">
+                    <img src="{{ asset('images/beyaz-logo.png') }}" alt="UP Logo">
                 </a>
             </div>
 
