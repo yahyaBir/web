@@ -5,19 +5,55 @@
     </div>
     
     <div class="product-grid">
-        @for ($i = 1; $i <= 4; $i++)
+       
             <article class="product-card">
                 <div class="product-image">
                     <img src="{{ asset('images/metal-tank.jpg') }}" 
-                         alt="Süperkritik Ekstraktör Model {{ $i }}"
+                         alt="Süperkritik Ekstraktör Model "
                          loading="lazy"
                          width="300"
                          height="400">
                 </div>
                 <div class="product-info">
-                    <h3>Süperkritik Ekstraktör</h3>
+                    <h3>Pilot</h3>
                 </div>
             </article>
-        @endfor
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="{{ asset('images/metal-tank.jpg') }}" 
+                         alt="Süperkritik Ekstraktör Model "
+                         loading="lazy"
+                         width="300"
+                         height="400">
+                </div>
+                <div class="product-info">
+                    <h3>Hafif Endüstriyel</h3>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="{{ asset('images/metal-tank.jpg') }}" 
+                         alt="Süperkritik Ekstraktör Model"
+                         loading="lazy"
+                         width="300"
+                         height="400">
+                </div>
+                <div class="product-info">
+                    <h3>Endüstriyel</h3>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="{{ asset('images/metal-tank.jpg') }}" 
+                         alt="Süperkritik Ekstraktör Model"
+                         loading="lazy"
+                         width="300"
+                         height="400">
+                </div>
+                <div class="product-info">
+                    <h3>Ağır Endüstriyel</h3>
+                </div>
+            </article>
+
     </div>
 </section> 

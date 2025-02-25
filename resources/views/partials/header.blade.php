@@ -15,7 +15,7 @@
         <div class="navbar-menu">
             <ul class="nav-list">
                 <li class="nav-item">
-                    <a href="#sektorler" class="nav-link">Süperkritik CO2</a>
+                    <a href="{{ route('superkritik') }}" class="nav-link">Süperkritik CO2</a>
                 </li>
                 <li class="nav-item dropdown">
                     <button class="nav-link dropdown-toggle">
@@ -33,14 +33,14 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#hakkimizda" class="nav-link">Uygulamalar</a>
+                    <a href="{{ route('applications') }}" class="nav-link">Uygulamalar</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#iletisim" class="nav-link">Hakkımızda</a>
+                    <a href="{{ route('about') }}" class="nav-link">Hakkımızda</a>
                 </li>
             </ul>
             <div class="navbar-end">
-                <a href="#iletisim" class="contact-button">İletişim</a>
+                <a href="{{ route('contact') }}" class="contact-button">İletişim</a>
             </div>
         </div>
     </nav>
