@@ -8,9 +8,11 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip \
-    nodejs \
-    npm
+    unzip
+
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -31,7 +33,10 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Install NPM dependencies and build assets
-RUN npm install && npm run build
+RUN npm cache clean --force && \
+    rm -rf node_modules package-lock.json && \
+    npm install && \
+    npm run build
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
