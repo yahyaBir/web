@@ -1,9 +1,58 @@
+// Import main.js içeriğini buraya taşıyalım
 document.addEventListener('DOMContentLoaded', function() {
     const header = document.querySelector('.header');
     const mobileToggle = document.querySelector('.mobile-toggle');
     const navbarMenu = document.querySelector('.navbar-menu');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    // Features section için yeni kodlar
+    const featuresContainer = document.querySelector('.features-container');
+    if (!featuresContainer) return;
+
+    const featureButtons = document.querySelectorAll('.feature-btn');
+    const featureInfos = document.querySelectorAll('.feature-info');
+    const featureDescriptions = document.querySelectorAll('.feature-description');
+
+    function setActiveFeature(featureId) {
+        // Remove active classes and reset styles
+        featureButtons.forEach(btn => {
+            btn.classList.remove('active');
+            const title = btn.querySelector('.feature-title');
+            if (title) title.style.color = '#999999';
+        });
+        featureInfos.forEach(info => info.classList.remove('active'));
+        featureDescriptions.forEach(desc => desc.classList.remove('active'));
+
+        // Add active classes and set styles for selected feature
+        const selectedButton = document.querySelector(`.feature-btn[data-feature="${featureId}"]`);
+        const selectedInfo = document.querySelector(`.feature-info[data-feature="${featureId}"]`);
+        const selectedDescription = document.querySelector(`.feature-description[data-feature="${featureId}"]`);
+
+        if (selectedButton) {
+            selectedButton.classList.add('active');
+            const title = selectedButton.querySelector('.feature-title');
+            if (title) title.style.color = 'var(--primary-color)';
+        }
+        if (selectedInfo) selectedInfo.classList.add('active');
+        if (selectedDescription) selectedDescription.classList.add('active');
+    }
+
+    // Add hover event listeners to feature buttons
+    featureButtons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            const featureId = button.getAttribute('data-feature');
+            setActiveFeature(featureId);
+        });
+    });
+
+    // Set initial active feature
+    setActiveFeature('extraction');
+
+    // Add mouseleave event to features container
+    featuresContainer.addEventListener('mouseleave', () => {
+        setActiveFeature('extraction');
+    });
 
     // Mobile menü toggle
     if (mobileToggle && navbarMenu) {
@@ -77,5 +126,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdownMenu.style.maxHeight = null;
             }
         }
+    });
+
+    // FAQ Accordion
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            const isExpanded = question.getAttribute('aria-expanded') === 'true';
+            
+            // Close all other answers
+            faqQuestions.forEach(q => {
+                if (q !== question) {
+                    q.setAttribute('aria-expanded', 'false');
+                    q.nextElementSibling.style.maxHeight = '0';
+                }
+            });
+            
+            // Toggle current answer
+            question.setAttribute('aria-expanded', !isExpanded);
+            answer.style.maxHeight = !isExpanded ? `${answer.scrollHeight}px` : '0';
+        });
     });
 }); 
