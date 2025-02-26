@@ -3,9 +3,22 @@ set -ex
 
 echo "Starting entrypoint script..."
 
+# Configure Apache for Railway's dynamic port
+echo "Configuring Apache for port ${PORT:-80}..."
+sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf
+sed -i "s/*:80/*:${PORT:-80}/" /etc/apache2/sites-available/000-default.conf
+
 # Check environment variables
 echo "Checking environment variables..."
-env
+printenv
+
+# Check disk space and directory structure
+echo "Checking disk space..."
+df -h
+echo "Checking directory structure..."
+ls -la /var/www/html/
+ls -la /var/www/html/public/
+ls -la /var/www/html/storage/
 
 # Check PHP version and modules
 echo "PHP Version:"
@@ -14,23 +27,16 @@ echo "PHP Modules:"
 php -m
 
 # Check Laravel logs
-echo "Checking Laravel logs..."
+echo "Creating Laravel log file if not exists..."
+touch storage/logs/laravel.log
+echo "Recent Laravel logs:"
 tail -n 50 storage/logs/laravel.log || true
-
-# Check storage directory structure
-echo "Checking storage directory structure..."
-tree storage/ || ls -R storage/
 
 # Generate application key if not set
 if [ -z "$APP_KEY" ]; then
     echo "Generating application key..."
     php artisan key:generate --force
 fi
-
-# Check storage directory permissions
-echo "Checking storage permissions..."
-ls -la storage/
-ls -la storage/framework/
 
 # Clear all caches
 echo "Clearing caches..."
@@ -45,7 +51,7 @@ php artisan view:cache || (echo "View cache failed" && php artisan view:clear &&
 # Create storage link if it doesn't exist
 if [ ! -L public/storage ]; then
     echo "Creating storage link..."
-    php artisan storage:link
+    php artisan storage:link || true
 fi
 
 # Fix permissions
@@ -55,17 +61,22 @@ chmod -R 755 /var/www/html/storage
 chown -R www-data:www-data /var/www/html/bootstrap/cache
 chmod -R 755 /var/www/html/bootstrap/cache
 
+# Verify Vite build
+echo "Checking Vite build..."
+ls -la public/build/ || true
+cat public/build/manifest.json || echo "No manifest file found"
+
 # Check Apache configuration
 echo "Checking Apache configuration..."
 apache2ctl -t -D DUMP_MODULES
 apache2ctl -S
 
-# Check Apache logs
-echo "Checking Apache error log..."
-tail -n 50 /var/log/apache2/error.log || true
-echo "Checking Apache access log..."
-tail -n 50 /var/log/apache2/access.log || true
+# Create log directory if it doesn't exist
+mkdir -p /var/log/apache2
+touch /var/log/apache2/error.log
+touch /var/log/apache2/access.log
+chown -R www-data:www-data /var/log/apache2
 
 # Start Apache with debug output
-echo "Starting Apache..."
+echo "Starting Apache on port ${PORT:-80}..."
 exec apache2-foreground -e debug 

@@ -59,8 +59,7 @@ ENV APP_ENV=production \
     APP_URL=https://arsenprosess.up.railway.app \
     ASSET_URL=https://arsenprosess.up.railway.app \
     VITE_APP_URL=https://arsenprosess.up.railway.app \
-    VITE_MANIFEST_PATH=/build/manifest.json \
-    PORT=80
+    VITE_MANIFEST_PATH=/build/manifest.json
 
 # Build assets
 RUN npm run build
@@ -77,12 +76,12 @@ RUN a2enmod rewrite headers
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# Configure Apache for dynamic port
+RUN echo "Listen \${PORT:-80}" > /etc/apache2/ports.conf
+
 # Start script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# Expose port
-EXPOSE 80
 
 # Set the entrypoint
 ENTRYPOINT ["docker-entrypoint.sh"] 
