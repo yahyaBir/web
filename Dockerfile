@@ -41,16 +41,15 @@ COPY composer.json composer.lock ./
 # Install composer dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Copy package files
-COPY package.json package-lock.json ./
-
-# Install npm dependencies and build assets
-RUN npm ci --no-audit \
-    && npm run build \
-    && rm -rf node_modules
+# Copy package files and install npm dependencies
+COPY package.json ./
+RUN npm install --no-audit
 
 # Copy the rest of the application code
 COPY . .
+
+# Build assets and cleanup
+RUN npm run build && rm -rf node_modules
 
 # Create environment file
 RUN cp .env.example .env
