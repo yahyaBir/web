@@ -34,16 +34,20 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Copy package files
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 # Install npm dependencies
-RUN npm install
+RUN npm install --no-audit
 
 # Copy the rest of the application code
 COPY . .
 
 # Create environment file
 RUN cp .env.example .env
+
+# Set environment variables for production
+ENV VITE_APP_ENV=production \
+    VITE_APP_URL=https://your-app-name.railway.app
 
 # Build assets
 RUN npm run build
