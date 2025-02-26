@@ -42,8 +42,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Generate key and optimize
-RUN php artisan key:generate --force
+# Create environment file
+RUN cp .env.example .env
 
 # Build assets
 RUN npm run build
@@ -52,7 +52,8 @@ RUN npm run build
 RUN php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
-    php artisan storage:link
+    php artisan storage:link && \
+    php artisan key:generate --force
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
