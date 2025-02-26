@@ -9,22 +9,15 @@ export default defineConfig({
         }),
     ],
     build: {
-        manifest: true,
         outDir: 'public/build',
-        assetsDir: 'assets',
+        emptyOutDir: true,
+        manifest: true,
         rollupOptions: {
-            output: {
-                chunkFileNames: 'assets/[name]-[hash].js',
-                entryFileNames: 'assets/[name]-[hash].js',
-                assetFileNames: 'assets/[name]-[hash].[ext]',
-            },
-        },
-        minify: 'terser',
-        terserOptions: {
-            compress: {
-                drop_console: true,
-            },
-        },
+            input: {
+                app: 'resources/js/app.js',
+                style: 'resources/css/app.css'
+            }
+        }
     },
     server: {
         hmr: {

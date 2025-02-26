@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
 
 # Install Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -26,19 +27,21 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files first for better caching
+# Copy package.json first
+COPY package*.json ./
+RUN npm install
+
+# Copy composer files
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts
-
-# Copy package.json for npm
-COPY package.json package-lock.json* ./
-RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
 
-# Generate production assets
-RUN npm run build
+# Install dependencies and build assets
+RUN npm install && \
+    npm run build && \
+    rm -rf node_modules
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
@@ -50,8 +53,7 @@ RUN chown -R www-data:www-data /var/www/html \
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Generate Laravel key and optimize
-RUN php artisan key:generate --force \
-    && php artisan config:cache \
+RUN php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache
 
