@@ -61,9 +61,5 @@
         "sort-packages": true
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "engines": {
-        "php": "8.2.*",
-        "node": "20.*"
-    }
+    "prefer-stable": true
 }
