@@ -8,14 +8,15 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js
+# Install Node.js and npm
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
@@ -26,14 +27,29 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application code
+# Copy composer files first
+COPY composer.json composer.lock ./
+
+# Install composer dependencies
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Copy package files
+COPY package.json package-lock.json ./
+
+# Install npm dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
 
-# Install dependencies and build
-RUN composer install --no-dev --optimize-autoloader && \
-    npm install && \
-    npm run build && \
-    php artisan config:cache && \
+# Generate key and optimize
+RUN php artisan key:generate --force
+
+# Build assets
+RUN npm run build
+
+# Cache and optimize
+RUN php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
     php artisan storage:link
