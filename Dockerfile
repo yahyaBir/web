@@ -42,10 +42,12 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Copy package files
-COPY package.json ./
+COPY package.json package-lock.json ./
 
-# Install npm dependencies
-RUN npm install --no-audit
+# Install npm dependencies and build assets
+RUN npm ci --no-audit \
+    && npm run build \
+    && rm -rf node_modules
 
 # Copy the rest of the application code
 COPY . .
@@ -56,13 +58,10 @@ RUN cp .env.example .env
 # Set environment variables
 ENV APP_ENV=production \
     APP_DEBUG=true \
+    PORT=8080 \
     APP_URL=https://arsenprosess.up.railway.app \
     ASSET_URL=https://arsenprosess.up.railway.app \
-    VITE_APP_URL=https://arsenprosess.up.railway.app \
-    VITE_MANIFEST_PATH=/build/manifest.json
-
-# Build assets
-RUN npm run build
+    VITE_APP_URL=https://arsenprosess.up.railway.app
 
 # Set directory permissions
 RUN mkdir -p storage/framework/{sessions,views,cache} \
@@ -76,8 +75,8 @@ RUN a2enmod rewrite headers
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Configure Apache for dynamic port
-RUN echo "Listen \${PORT:-80}" > /etc/apache2/ports.conf
+# Expose port 8080
+EXPOSE 8080
 
 # Start script
 COPY docker-entrypoint.sh /usr/local/bin/

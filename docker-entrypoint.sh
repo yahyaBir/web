@@ -3,11 +3,6 @@ set -ex
 
 echo "Starting entrypoint script..."
 
-# Configure Apache for Railway's dynamic port
-echo "Configuring Apache for port ${PORT:-80}..."
-sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf
-sed -i "s/*:80/*:${PORT:-80}/" /etc/apache2/sites-available/000-default.conf
-
 # Check environment variables
 echo "Checking environment variables..."
 printenv
@@ -66,17 +61,16 @@ echo "Checking Vite build..."
 ls -la public/build/ || true
 cat public/build/manifest.json || echo "No manifest file found"
 
-# Check Apache configuration
-echo "Checking Apache configuration..."
-apache2ctl -t -D DUMP_MODULES
-apache2ctl -S
-
 # Create log directory if it doesn't exist
 mkdir -p /var/log/apache2
 touch /var/log/apache2/error.log
 touch /var/log/apache2/access.log
 chown -R www-data:www-data /var/log/apache2
 
-# Start Apache with debug output
-echo "Starting Apache on port ${PORT:-80}..."
-exec apache2-foreground -e debug 
+# Check Apache configuration
+echo "Checking Apache configuration..."
+apache2ctl -t
+
+# Start Apache
+echo "Starting Apache on port 8080..."
+exec apache2-foreground 
