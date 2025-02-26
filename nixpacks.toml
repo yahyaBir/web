@@ -1,6 +1,6 @@
 [phases.setup]
-nixPkgs = ['php81', 'php81Packages.composer']
-aptPkgs = ['php8.1-cli', 'php8.1-mbstring', 'php8.1-xml', 'php8.1-zip', 'unzip']
+nixPkgs = ['php82', 'php82Packages.composer']
+aptPkgs = ['php8.2-cli', 'php8.2-mbstring', 'php8.2-xml', 'php8.2-zip', 'unzip']
 
 [phases.install]
 cmds = [
@@ -11,4 +11,4 @@ cmds = [
 ]
 
 [start]
-cmd = 'php artisan serve --host=0.0.0.0 --port=${PORT:-8000}' 
+cmd = 'php artisan serve --host=0.0.0.0 --port=${PORT:-8000}'
