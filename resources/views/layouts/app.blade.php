@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
     @include('partials.head')
+    @vite(['resources/js/app.js'])
 </head>
 <body>
     @include('partials.header')
@@ -14,6 +15,5 @@
 
     <!-- Scripts -->
     @stack('scripts')
-    <script src="{{ asset('js/main.js') }}"></script>
 </body>
 </html> 
