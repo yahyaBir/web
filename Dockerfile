@@ -26,24 +26,34 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application directory
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Copy package.json for npm
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+# Copy the rest of the application code
 COPY . .
 
-# Install Composer dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Generate production assets
+RUN npm run build
 
-# Install NPM dependencies and build assets
-RUN npm cache clean --force && \
-    rm -rf node_modules package-lock.json && \
-    npm install && \
-    npm run build
-
-# Set permissions
+# Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache \
     && a2enmod rewrite
 
 # Copy Apache configuration
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Generate Laravel key and optimize
+RUN php artisan key:generate --force \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
 
 # Expose port 80
 EXPOSE 80
