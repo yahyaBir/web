@@ -1,15 +1,9 @@
 [phases.setup]
-nixPkgs = ['php82', 'php82Extensions.opcache', 'nodejs', 'npm']
+nixPkgs = ['php81']
 
 [phases.install]
 cmds = [
     'composer install --no-dev',
-    'npm ci',
-    'npm run build'
-]
-
-[phases.build]
-cmds = [
     'php artisan config:cache',
     'php artisan route:cache',
     'php artisan view:cache'
