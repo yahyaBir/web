@@ -1,34 +1,28 @@
 [phases.setup]
-aptPkgs = [
-    "php8.1-cli",
-    "php8.1-common",
-    "php8.1-fpm",
-    "php8.1-mysql",
-    "php8.1-zip",
-    "php8.1-gd",
-    "php8.1-mbstring",
-    "php8.1-curl",
-    "php8.1-xml",
-    "php8.1-bcmath",
-    "php8.1-sqlite3",
-    "php8.1-pdo",
-    "php8.1-tokenizer",
-    "php8.1-json",
-    "php8.1-intl"
+cmds = [
+    "apt-get update",
+    "apt-get install -y software-properties-common",
+    "add-apt-repository -y ppa:ondrej/php",
+    "apt-get update",
+    "apt-get install -y php8.1-cli php8.1-common php8.1-fpm php8.1-mysql php8.1-zip php8.1-gd php8.1-mbstring php8.1-curl php8.1-xml php8.1-bcmath php8.1-sqlite3",
+    "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"",
+    "php composer-setup.php --install-dir=/usr/local/bin --filename=composer",
+    "php -r \"unlink('composer-setup.php');\""
 ]
 
 [phases.install]
 cmds = [
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
-    "composer install --no-dev --optimize-autoloader --no-interaction --no-progress"
+    "composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist"
 ]
 
 [phases.build]
 cmds = [
+    "mkdir -p storage/framework/{sessions,views,cache}",
+    "chmod -R 775 storage bootstrap/cache",
     "php artisan config:cache",
     "php artisan route:cache",
     "php artisan view:cache"
 ]
 
 [start]
-cmd = "vendor/bin/heroku-php-apache2 public/"
+cmd = "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"
