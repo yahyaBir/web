@@ -45,25 +45,28 @@ COPY . .
 # Create environment file
 RUN cp .env.example .env
 
-# Set environment variables for production
-ENV VITE_APP_ENV=production \
-    VITE_APP_URL=https://your-app-name.railway.app
+# Set environment variables
+ENV APP_ENV=production \
+    APP_DEBUG=false \
+    APP_URL=https://arsenprosess.up.railway.app \
+    ASSET_URL=https://arsenprosess.up.railway.app \
+    VITE_APP_URL=https://arsenprosess.up.railway.app \
+    VITE_MANIFEST_PATH=/build/manifest.json
 
 # Build assets
 RUN npm run build
 
-# Cache and optimize
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan storage:link && \
-    php artisan key:generate --force
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
+# Set directory permissions
+RUN mkdir -p storage/framework/{sessions,views,cache} \
+    && mkdir -p storage/logs \
+    && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache \
     && a2enmod rewrite
+
+# Configure Apache
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && sed -i 's/\/var\/www\/html/\/var\/www\/html\/public/g' /etc/apache2/sites-available/000-default.conf
 
 # Copy Apache configuration
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
@@ -71,5 +74,9 @@ COPY apache.conf /etc/apache2/sites-available/000-default.conf
 # Expose port 80
 EXPOSE 80
 
-# Start Apache
-CMD ["apache2-foreground"] 
+# Start script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"] 
