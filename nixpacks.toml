@@ -1,20 +1,24 @@
 [phases.setup]
-nixPkgs = [
-    "php81",
-    "php81Extensions.common",
-    "php81Extensions.curl",
-    "php81Extensions.intl",
-    "php81Extensions.mbstring",
-    "php81Extensions.pdo",
-    "php81Extensions.tokenizer",
-    "php81Extensions.xml",
-    "php81Extensions.zip"
+cmds = [
+    "apt-get update",
+    "apt-get install -y apache2 libapache2-mod-php8.1 php8.1-cli php8.1-common php8.1-mysql php8.1-zip php8.1-gd php8.1-mbstring php8.1-curl php8.1-xml php8.1-bcmath php8.1-sqlite3",
+    "a2enmod rewrite",
+    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
 ]
 
 [phases.install]
 cmds = [
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
-    "composer install --no-dev --optimize-autoloader --no-interaction"
+    "composer install --no-dev --optimize-autoloader --no-interaction",
+    "cp apache2.conf /etc/apache2/apache2.conf",
+    "echo 'ServerName localhost' >> /etc/apache2/apache2.conf",
+    "echo '<VirtualHost *:80>' > /etc/apache2/sites-available/000-default.conf",
+    "echo '    DocumentRoot /app/public' >> /etc/apache2/sites-available/000-default.conf",
+    "echo '    <Directory /app/public>' >> /etc/apache2/sites-available/000-default.conf",
+    "echo '        Options Indexes FollowSymLinks' >> /etc/apache2/sites-available/000-default.conf",
+    "echo '        AllowOverride All' >> /etc/apache2/sites-available/000-default.conf",
+    "echo '        Require all granted' >> /etc/apache2/sites-available/000-default.conf",
+    "echo '    </Directory>' >> /etc/apache2/sites-available/000-default.conf",
+    "echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default.conf"
 ]
 
 [phases.build]
@@ -27,4 +31,4 @@ cmds = [
 ]
 
 [start]
-cmd = "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"
+cmd = "apache2ctl -D FOREGROUND"
