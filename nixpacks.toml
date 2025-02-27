@@ -1,24 +1,19 @@
 [phases.setup]
 cmds = [
     "apt-get update",
-    "apt-get install -y apache2 libapache2-mod-php8.1 php8.1-cli php8.1-common php8.1-mysql php8.1-zip php8.1-gd php8.1-mbstring php8.1-curl php8.1-xml php8.1-bcmath php8.1-sqlite3",
-    "a2enmod rewrite",
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
+    "apt-get install -y software-properties-common",
+    "add-apt-repository -y ppa:ondrej/php",
+    "apt-get update",
+    "apt-get install -y php8.1-fpm php8.1-cli php8.1-common php8.1-mysql php8.1-zip php8.1-gd php8.1-mbstring php8.1-curl php8.1-xml php8.1-bcmath php8.1-sqlite3",
+    "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"",
+    "EXPECTED_SIGNATURE=\"$(wget -q -O - https://composer.github.io/installer.sig)\"",
+    "ACTUAL_SIGNATURE=\"$(php -r \"echo hash_file('sha384', 'composer-setup.php');\")\""
 ]
 
 [phases.install]
 cmds = [
-    "composer install --no-dev --optimize-autoloader --no-interaction",
-    "cp apache2.conf /etc/apache2/apache2.conf",
-    "echo 'ServerName localhost' >> /etc/apache2/apache2.conf",
-    "echo '<VirtualHost *:80>' > /etc/apache2/sites-available/000-default.conf",
-    "echo '    DocumentRoot /app/public' >> /etc/apache2/sites-available/000-default.conf",
-    "echo '    <Directory /app/public>' >> /etc/apache2/sites-available/000-default.conf",
-    "echo '        Options Indexes FollowSymLinks' >> /etc/apache2/sites-available/000-default.conf",
-    "echo '        AllowOverride All' >> /etc/apache2/sites-available/000-default.conf",
-    "echo '        Require all granted' >> /etc/apache2/sites-available/000-default.conf",
-    "echo '    </Directory>' >> /etc/apache2/sites-available/000-default.conf",
-    "echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default.conf"
+    "COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction",
+    "php artisan key:generate --force"
 ]
 
 [phases.build]
@@ -31,4 +26,4 @@ cmds = [
 ]
 
 [start]
-cmd = "apache2ctl -D FOREGROUND"
+cmd = "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"
